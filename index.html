@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz: Análisis de Mercados Competitivos</title>
+<style>
+  /* ============== RESET & BASE ============== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #58cc02;
+    --primary-dark: #46a302;
+    --primary-light: #d7ffb8;
+    --secondary: #1cb0f6;
+    --secondary-dark: #1899d6;
+    --accent: #ce82ff;
+    --danger: #ff4b4b;
+    --danger-dark: #ea2b2b;
+    --warning: #ffc800;
+    --bg: #f7f7f7;
+    --card: #ffffff;
+    --text: #3c3c3c;
+    --text-soft: #777777;
+    --border: #e5e5e5;
+    --shadow-soft: 0 2px 0 rgba(0,0,0,0.08);
+    --shadow-card: 0 4px 0 rgba(0,0,0,0.08);
+    --radius: 16px;
+    --radius-sm: 12px;
+  }
+  html, body {
+    font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  /* ============== LAYOUT ============== */
+  .app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  /* ============== HEADER ============== */
+  header.top-bar {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+  }
+  .logo .badge {
+    background: var(--primary);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 1.4rem;
+  }
+  .nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav button {
+    background: transparent;
+    color: var(--text-soft);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: #eee; color: var(--text); }
+  .nav button.active {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  /* ============== SECTIONS ============== */
+  section { display: none; animation: fadeIn 0.35s ease; }
+  section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  /* ============== DASHBOARD ============== */
+  .hero {
+    background: linear-gradient(135deg, #58cc02 0%, #1cb0f6 100%);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    color: #fff;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero p {
+    font-size: 1.05rem;
+    opacity: 0.95;
+    max-width: 720px;
+    position: relative;
+    z-index: 1;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+    border-bottom: 4px solid var(--border);
+  }
+  .stat-card .icon {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+  }
+  .stat-card .label {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-card .value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .progress-bar {
+    background: #eee;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .progress-bar > div {
+    background: var(--primary);
+    height: 100%;
+    transition: width 0.4s ease;
+    border-radius: 6px;
+  }
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .action-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    border-bottom: 4px solid var(--primary);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-align: left;
+    width: 100%;
+  }
+  .action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 rgba(0,0,0,0.08);
+  }
+  .action-card.alt { border-bottom-color: var(--secondary); }
+  .action-card.acc { border-bottom-color: var(--accent); }
+  .action-card .emoji { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .action-card h3 { font-size: 1.15rem; margin-bottom: 6px; color: var(--text); }
+  .action-card p { color: var(--text-soft); font-size: 0.92rem; }
+  /* ============== DOCUMENTS ============== */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .section-header h2 { font-size: 1.7rem; color: var(--text); font-weight: 800; }
+  .section-header p.subtitle { color: var(--text-soft); margin-top: 4px; font-size: 0.95rem; }
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .doc-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-soft);
+    border: 2px solid var(--border);
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .doc-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .doc-card .doc-icon {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+  }
+  .doc-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+  .doc-card p { color: var(--text-soft); font-size: 0.92rem; margin-bottom: 16px; min-height: 60px; }
+  .doc-card .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 4px solid transparent;
+    transition: transform 0.1s, filter 0.15s;
+  }
+  .btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border-bottom-color: var(--primary-dark);
+  }
+  .btn-primary:hover { filter: brightness(1.05); }
+  .btn-secondary {
+    background: var(--secondary);
+    color: #fff;
+    border-bottom-color: var(--secondary-dark);
+  }
+  .btn-outline {
+    background: #fff;
+    color: var(--text);
+    border: 2px solid var(--border);
+    border-bottom: 4px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary-dark); }
+  .btn-danger {
+    background: var(--danger);
+    color: #fff;
+    border-bottom-color: var(--danger-dark);
+  }
+  /* ============== FLASHCARDS ============== */
+  .flashcard-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .flashcard-counter {
+    font-weight: 800;
+    color: var(--text-soft);
+    background: var(--card);
+    padding: 10px 18px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+  }
+  .flashcard-wrap {
+    perspective: 1500px;
+    max-width: 640px;
+    margin: 0 auto;
+    height: 380px;
+  }
+  .flashcard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .flashcard .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .flashcard .front {
+    background: linear-gradient(135deg, #58cc02 0%, #46a302 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .flashcard .front .label {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1.2px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+    font-weight: 800;
+  }
+  .flashcard .front h2 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .flashcard .front .hint { opacity: 0.9; font-size: 0.95rem; margin-top: auto; }
+  .flashcard .back {
+    background: var(--card);
+    transform: rotateY(180deg);
+    color: var(--text);
+  }
+  .flashcard .back h3 {
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    font-weight: 800;
+  }
+  .flashcard .back .block { margin-bottom: 14px; }
+  .flashcard .back .block:last-child { margin-bottom: 0; }
+  .flashcard .back .block p { font-size: 0.98rem; }
+  .flashcard .back .key-fact {
+    background: #fff8d6;
+    border-left: 4px solid var(--warning);
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-top: 4px;
+  }
+  .flashcard .back .key-fact strong { color: #946700; }
+  /* ============== QUIZ ============== */
+  .quiz-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+    max-width: 740px;
+    margin: 0 auto;
+  }
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .quiz-progress .bar {
+    flex: 1;
+    height: 14px;
+    background: #eee;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .quiz-progress .bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.4s ease;
+    border-radius: 7px;
+  }
+  .quiz-progress .text { font-weight: 800; color: var(--text-soft); white-space: nowrap; }
+  .quiz-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 14px;
+  }
+  .quiz-tag.tf { background: #e8f4ff; color: var(--secondary-dark); }
+  .quiz-tag.fill { background: #fdedff; color: #9b3dca; }
+  .quiz-tag.short { background: #fff3d6; color: #946700; }
+  .question-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .option {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-bottom: 4px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: all 0.15s;
+    width: 100%;
+    cursor: pointer;
+  }
+  .option:hover:not(:disabled) {
+    border-color: var(--secondary);
+    background: #f0faff;
+  }
+  .option.selected {
+    border-color: var(--secondary);
+    background: #e8f4ff;
+    color: var(--secondary-dark);
+  }
+  .option.correct {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  .option.wrong {
+    border-color: var(--danger);
+    background: #ffe5e5;
+    color: var(--danger-dark);
+  }
+  .option:disabled { cursor: not-allowed; }
+  .text-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-bottom: 4px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    color: var(--text);
+  }
+  .text-input:focus { outline: none; border-color: var(--secondary); }
+  textarea.text-input { resize: vertical; min-height: 80px; }
+  .feedback {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: var(--radius-sm);
+    border-left: 6px solid var(--primary);
+    background: var(--primary-light);
+    animation: slideIn 0.3s ease;
+  }
+  .feedback.wrong {
+    border-left-color: var(--danger);
+    background: #ffe5e5;
+  }
+  .feedback h4 { font-size: 1.05rem; margin-bottom: 8px; }
+  .feedback.correct h4 { color: var(--primary-dark); }
+  .feedback.wrong h4 { color: var(--danger-dark); }
+  .feedback p { font-size: 0.95rem; color: var(--text); margin-bottom: 6px; }
+  .feedback .correct-answer {
+    background: rgba(255,255,255,0.65);
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 0.92rem;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .quiz-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  /* ============== RESULTS ============== */
+  .results {
+    text-align: center;
+    padding: 40px 24px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .results .trophy { font-size: 5rem; margin-bottom: 14px; }
+  .results h2 { font-size: 1.8rem; margin-bottom: 10px; color: var(--text); }
+  .results .score-big {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 12px 0 6px;
+  }
+  .results .score-detail { color: var(--text-soft); margin-bottom: 24px; }
+  .results-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 22px 0;
+    flex-wrap: wrap;
+  }
+  .results-stats .pill {
+    background: var(--bg);
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 800;
+  }
+  .results-stats .pill .v { font-size: 1.4rem; display: block; }
+  .results-stats .pill .l { font-size: 0.78rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; }
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 600px) {
+    .app { padding: 12px; }
+    .hero { padding: 24px 20px; }
+    .hero h1 { font-size: 1.5rem; }
+    .nav button { padding: 8px 12px; font-size: 0.85rem; }
+    .question-text { font-size: 1.05rem; }
+    .flashcard-wrap { height: 420px; }
+    .flashcard .face { padding: 22px; }
+    .flashcard .front h2 { font-size: 1.4rem; }
+    .results .score-big { font-size: 2.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============== TOP NAVIGATION ============== -->
+  <header class="top-bar">
+    <div class="logo">
+      <span class="badge">📊</span>
+      <span>Mercados Quiz</span>
+    </div>
+    <nav class="nav">
+      <button data-section="dashboard" class="active">🏠 Inicio</button>
+      <button data-section="documents">📄 Documentos</button>
+      <button data-section="flashcards">🃏 Fichas</button>
+      <button data-section="quiz">🎯 Cuestionario</button>
+    </nav>
+  </header>
+
+  <!-- ============== DASHBOARD ============== -->
+  <section id="dashboard" class="active">
+    <div class="hero">
+      <h1>Análisis de Mercados Competitivos</h1>
+      <p>Estudia los conceptos clave de la economía del bienestar: excedentes, eficiencia del mercado, control de precios, impuestos, subvenciones y restricciones al comercio. ¡Prepárate para tu quiz universitario de Microeconomía III!</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="icon">📚</div>
+        <div class="label">Documentos</div>
+        <div class="value">2</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🃏</div>
+        <div class="label">Fichas de estudio</div>
+        <div class="value" id="stat-flashcards">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">❓</div>
+        <div class="label">Preguntas del quiz</div>
+        <div class="value" id="stat-questions">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📈</div>
+        <div class="label">Progreso general</div>
+        <div class="value" id="stat-progress">0%</div>
+        <div class="progress-bar"><div id="overall-progress" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div>
+        <h2>¿Qué quieres hacer hoy?</h2>
+        <p class="subtitle">Empieza por donde te sientas más cómodo</p>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="action-card" data-go="documents">
+        <span class="emoji">📄</span>
+        <h3>Revisa los documentos</h3>
+        <p>Accede a las lecturas originales sobre análisis de mercados y eficiencia.</p>
+      </button>
+      <button class="action-card alt" data-go="flashcards">
+        <span class="emoji">🃏</span>
+        <h3>Estudia con fichas</h3>
+        <p>Repasa los conceptos clave con resúmenes visuales fáciles de memorizar.</p>
+      </button>
+      <button class="action-card acc" data-go="quiz">
+        <span class="emoji">🎯</span>
+        <h3>Pon a prueba tu conocimiento</h3>
+        <p>Resuelve preguntas tipo selección, V/F, completar y respuesta breve.</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============== DOCUMENTS ============== -->
+  <section id="documents">
+    <div class="section-header">
+      <div>
+        <h2>📄 Documentos universitarios</h2>
+        <p class="subtitle">Recursos de lectura para preparar el quiz</p>
+      </div>
+    </div>
+
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-icon">📘</div>
+        <h3>Análisis de mercados competitivos</h3>
+        <p>Documento extenso sobre economía del bienestar, excedente del consumidor y productor, control de precios, impuestos, subvenciones y restricciones al comercio.</p>
+        <div class="actions">
+          <a href="#" class="btn btn-primary" target="_blank">Abrir 📖</a>
+          <a href="#" class="btn btn-outline" download>Descargar ⬇️</a>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">📊</div>
+        <h3>Eficiencia del mercado</h3>
+        <p>Presentación que explica el equilibrio del mercado, las fallas, los efectos de impuestos y subvenciones, y las restricciones al comercio (aranceles y cuotas).</p>
+        <div class="actions">
+          <a href="#" class="btn btn-primary" target="_blank">Abrir 📖</a>
+          <a href="#" class="btn btn-outline" download>Descargar ⬇️</a>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">📝</div>
+        <h3>Bibliografía recomendada</h3>
+        <p>Nicholson (2008), Henderson & Quandt (1991), Pindyck & Rubinfeld (2011), Varian (2006) — clásicos de Microeconomía.</p>
+        <div class="actions">
+          <a href="#" class="btn btn-outline" target="_blank">Ver lista 📚</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FLASHCARDS ============== -->
+  <section id="flashcards">
+    <div class="section-header">
+      <div>
+        <h2>🃏 Fichas de estudio</h2>
+        <p class="subtitle">Toca la ficha para ver la explicación</p>
+      </div>
+    </div>
+
+    <div class="flashcard-controls">
+      <button class="btn btn-outline" id="prev-card">⬅ Anterior</button>
+      <span class="flashcard-counter" id="card-counter">1 / 1</span>
+      <button class="btn btn-outline" id="next-card">Siguiente ➡</button>
+    </div>
+
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard">
+        <div class="face front">
+          <div class="label">Concepto</div>
+          <h2 id="card-title">Cargando...</h2>
+          <div class="hint">👆 Toca para revelar</div>
+        </div>
+        <div class="face back">
+          <div class="block">
+            <h3>📘 Explicación</h3>
+            <p id="card-desc"></p>
+          </div>
+          <div class="block">
+            <h3>💡 Ejemplo / Aplicación</h3>
+            <p id="card-example"></p>
+          </div>
+          <div class="block">
+            <h3>⭐ Para memorizar</h3>
+            <div class="key-fact"><strong id="card-fact"></strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== QUIZ ============== -->
+  <section id="quiz">
+    <div class="section-header">
+      <div>
+        <h2>🎯 Cuestionario interactivo</h2>
+        <p class="subtitle">Responde, recibe feedback y avanza sin bloqueos</p>
+      </div>
+    </div>
+
+    <div id="quiz-container"></div>
+  </section>
+
+</div>
+
+<script>
+/* ====================================================================
+   DATA: FLASHCARDS
+   ==================================================================== */
+const FLASHCARDS = [
+  {
+    title: "Economía del Bienestar",
+    desc: "Estudia cómo la asignación de recursos afecta el bienestar económico de la sociedad, examinando los beneficios que reciben compradores y vendedores al participar en un mercado.",
+    example: "Comparar el bienestar antes y después de un control de precios para determinar si hubo ganancia o pérdida social neta.",
+    fact: "Bienestar Social = Excedente del Consumidor (EC) + Excedente del Productor (EP) = Excedente Total (ET)."
+  },
+  {
+    title: "Excedente del Consumidor (EC)",
+    desc: "Diferencia entre lo que los consumidores están dispuestos a pagar por un bien y lo que realmente pagan en el mercado. Mide el beneficio de participar en el mercado.",
+    example: "Si estás dispuesto a pagar $100 por un libro y lo compras a $70, tu EC personal es $30.",
+    fact: "Geométricamente es el área entre la curva de demanda y el precio de mercado."
+  },
+  {
+    title: "Excedente del Productor (EP)",
+    desc: "Diferencia entre el precio que percibe un productor y el precio mínimo al que estaría dispuesto a ofrecer cada unidad de producto.",
+    example: "Si un panadero está dispuesto a vender pan a $1 pero lo vende a $1,50, su EP por unidad es $0,50.",
+    fact: "Geométricamente es el área entre el precio de mercado y la curva de oferta (CMa). A largo plazo coincide con los beneficios."
+  },
+  {
+    title: "Disposición a pagar",
+    desc: "Cantidad máxima que un comprador está dispuesto a pagar por un bien. Mide cuánto valora el consumidor ese bien.",
+    example: "Si un cliente valora una taza de café en $5 como máximo, esa es su disposición a pagar.",
+    fact: "Si la disposición a pagar > precio de mercado, el consumidor obtiene un excedente positivo."
+  },
+  {
+    title: "Excedente Total (ET) y Eficiencia",
+    desc: "El ET = EC + EP. Es máximo en el equilibrio competitivo, donde la curva de demanda corta a la de oferta. Allí el valor marginal del consumidor iguala al costo marginal del productor.",
+    example: "En competencia perfecta, sin intervenciones, el mercado por sí solo maximiza el ET.",
+    fact: "Una asignación es eficiente si maximiza el ET. Cualquier desviación genera pérdida irrecuperable de eficiencia."
+  },
+  {
+    title: "Variación del EC (VEC)",
+    desc: "Mide en términos monetarios el cambio en el bienestar de los consumidores cuando cambia el precio de un bien.",
+    example: "Si sube el precio de la gasolina, el VEC es negativo: los consumidores pierden bienestar.",
+    fact: "VEC > 0 cuando el precio baja; VEC < 0 cuando el precio sube."
+  },
+  {
+    title: "Fallas de Mercado",
+    desc: "Situaciones en las que el mercado competitivo no asigna eficientemente los recursos porque los precios no transmiten señales correctas a consumidores y productores.",
+    example: "Contaminación de una fábrica que afecta a la comunidad sin estar reflejada en el precio del producto.",
+    fact: "Las tres fallas principales son: (1) competencia imperfecta, (2) externalidades y (3) información imperfecta."
+  },
+  {
+    title: "Externalidades",
+    desc: "Efectos secundarios de la producción o consumo que no se reflejan en el precio de mercado. Pueden ser positivas (beneficios) o negativas (costos).",
+    example: "Negativa: contaminación industrial. Positiva: vacunación o innovación tecnológica que beneficia a toda la sociedad.",
+    fact: "Las externalidades son una falla de mercado y justifican la intervención del Estado."
+  },
+  {
+    title: "Información Imperfecta",
+    desc: "Cuando consumidores o productores no tienen información completa sobre la calidad, naturaleza o precios de los bienes.",
+    example: "Comprar un auto usado sin saber su historial de accidentes (problema del 'mercado de limones').",
+    fact: "Bajo información imperfecta, el consumidor no maximiza realmente su utilidad."
+  },
+  {
+    title: "Intervención del Estado",
+    desc: "El Estado interviene en la economía por tres motivos principales: redistribución del ingreso, razones macroeconómicas y corrección de fallas de mercado.",
+    example: "Subsidios a familias de bajos ingresos (redistribución), políticas fiscales contra inflación (macro), regulación ambiental (fallas).",
+    fact: "La intervención no siempre es negativa: puede corregir fallas pero también puede generar PIE."
+  },
+  {
+    title: "Precio Máximo (Control)",
+    desc: "Precio fijado por el Estado por debajo del precio de equilibrio del mercado. Provoca escasez porque la cantidad demandada supera a la ofrecida.",
+    example: "Alquileres regulados: el precio máximo crea exceso de demanda y escasez de viviendas disponibles.",
+    fact: "Los consumidores que logran comprar ganan, pero hay PIE total y los productores siempre pierden."
+  },
+  {
+    title: "Precio Mínimo (Control)",
+    desc: "Precio fijado por el Estado por encima del precio de equilibrio. Genera exceso de oferta porque se vende menos de lo que se produce.",
+    example: "Salario mínimo por encima del salario de equilibrio genera desempleo (exceso de oferta de trabajo).",
+    fact: "Los consumidores siempre pierden; algunos productores ganan, pero hay PIE social neta."
+  },
+  {
+    title: "Salario Mínimo",
+    desc: "Ejemplo clásico de precio mínimo. Cuando se fija por encima del salario de equilibrio, la cantidad de trabajo ofrecida supera a la demandada.",
+    example: "Trabajadores empleados ganan más, pero otros quedan desempleados al no poder pagar las empresas ese salario.",
+    fact: "Genera desempleo involuntario y pérdida irrecuperable de eficiencia."
+  },
+  {
+    title: "Pérdida Irrecuperable de Eficiencia (PIE)",
+    desc: "Pérdida neta de excedente total (consumidor + productor) que ocurre cuando el mercado no alcanza el equilibrio competitivo eficiente.",
+    example: "Un impuesto, un control de precios o un arancel siempre generan PIE.",
+    fact: "Es el costo de eficiencia que cualquier intervención impone a la sociedad."
+  },
+  {
+    title: "Impuesto en el Mercado",
+    desc: "Carga fiscal que crea una brecha entre el precio que paga el comprador y el que recibe el vendedor. Reduce la cantidad transada y genera PIE.",
+    example: "Impuesto al cigarrillo: sube el precio para el consumidor y baja el ingreso neto para el productor.",
+    fact: "Da igual si se grava al comprador o al vendedor: el efecto económico es el mismo."
+  },
+  {
+    title: "Distribución de la Carga Tributaria",
+    desc: "El reparto del impuesto entre consumidor y productor depende de las elasticidades de demanda y oferta. La parte menos elástica soporta más carga.",
+    example: "Si la demanda es muy inelástica (cigarrillos), casi todo el impuesto recae en el consumidor.",
+    fact: "Demanda totalmente inelástica → 100% al consumidor; demanda totalmente elástica → 100% al productor."
+  },
+  {
+    title: "Tipos de Impuestos",
+    desc: "Pueden ser fijos (cantidad determinada), ad-quantum (por cantidad vendida) o ad-valorem (porcentaje del precio).",
+    example: "IVA = ad-valorem (porcentaje); impuesto específico al combustible por litro = ad-quantum.",
+    fact: "Los ad-valorem cambian la pendiente de la curva afectada; los ad-quantum la desplazan paralelamente."
+  },
+  {
+    title: "Subvenciones (Subsidios)",
+    desc: "Pagos del Estado que reducen el precio que paga el comprador por debajo del que recibe el vendedor. Funcionan como un 'impuesto negativo'.",
+    example: "Subsidio a la educación o al transporte público para incentivar su consumo.",
+    fact: "Aumentan la cantidad transada, pero el más beneficiado es el agente con curva más inelástica."
+  },
+  {
+    title: "Aranceles",
+    desc: "Impuestos sobre bienes importados. Elevan el precio doméstico por encima del precio mundial, protegiendo a productores nacionales.",
+    example: "Arancel a zapatos importados: los productores locales ganan, pero los consumidores pagan más y se importa menos.",
+    fact: "Generan ingresos al gobierno y PIE para los consumidores; el bienestar total disminuye."
+  },
+  {
+    title: "Cuotas / Contingentes de Importación",
+    desc: "Cantidad máxima permitida de un bien importado. Restringen el comercio y elevan el precio doméstico, similar al arancel.",
+    example: "Cuota de importación de azúcar: solo se pueden importar X toneladas al año.",
+    fact: "A diferencia del arancel, no genera ingresos fiscales directos; la renta va a quien tiene la licencia."
+  },
+  {
+    title: "Equilibrio del Mercado",
+    desc: "Punto donde la curva de oferta y la de demanda se cortan; consumidores y oferentes están dispuestos a transar la misma cantidad al mismo precio.",
+    example: "El precio que 'vacía' el mercado: no hay escasez ni exceso de oferta.",
+    fact: "En competencia perfecta, este punto maximiza el bienestar social (ET)."
+  },
+  {
+    title: "Eficiencia del Mercado Competitivo",
+    desc: "En competencia perfecta sin intervenciones, el mercado asigna recursos eficientemente: maximiza EC + EP y no hay PIE.",
+    example: "Sirve como referencia (benchmark) para evaluar otras estructuras como monopolio u oligopolio.",
+    fact: "Una asignación es ineficiente si existen ganancias potenciales no realizadas entre compradores y vendedores."
+  }
+];
+
+/* ====================================================================
+   DATA: QUIZ QUESTIONS
+   ==================================================================== */
+const QUESTIONS = [
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "¿Qué estudia la economía del bienestar?",
+    options: [
+      "Las preferencias individuales de los consumidores únicamente.",
+      "Cómo la asignación de recursos afecta el bienestar económico.",
+      "La política monetaria de los bancos centrales.",
+      "El crecimiento del PIB de un país."
+    ],
+    answer: 1,
+    explanation: "La economía del bienestar analiza el efecto que tiene la asignación de recursos sobre el bienestar de los agentes económicos (consumidores y productores)."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "El Excedente del Consumidor (EC) se define como:",
+    options: [
+      "El precio de equilibrio multiplicado por la cantidad.",
+      "La diferencia entre lo que el consumidor paga y el costo del productor.",
+      "La diferencia entre la disposición a pagar y el precio realmente pagado.",
+      "La suma de todos los precios pagados por los consumidores."
+    ],
+    answer: 2,
+    explanation: "El EC mide el beneficio del consumidor: cuánto valoraba él el bien menos cuánto pagó realmente. Geométricamente es el área entre la curva de demanda y el precio de mercado."
+  },
+  {
+    type: "tf",
+    typeLabel: "Verdadero o Falso",
+    question: "El Excedente del Productor (EP) a largo plazo coincide con los beneficios totales del productor.",
+    answer: true,
+    explanation: "A largo plazo no existen costos fijos, por lo que el EP (área entre el precio y el costo marginal) coincide con los beneficios totales."
+  },
+  {
+    type: "fill",
+    typeLabel: "Completa el espacio",
+    question: "El Bienestar Social o Excedente Total se calcula como ET = EC + ____.",
+    answer: ["ep", "excedente del productor"],
+    explanation: "Excedente Total = Excedente del Consumidor + Excedente del Productor. Esta suma se maximiza en el equilibrio competitivo."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "Si el precio de un bien disminuye, ¿qué ocurre con el Excedente del Consumidor?",
+    options: [
+      "Disminuye, porque hay menos ingresos.",
+      "Aumenta, porque los consumidores pagan menos y entran nuevos consumidores al mercado.",
+      "No cambia, porque las cantidades se mantienen.",
+      "Se transfiere al gobierno."
+    ],
+    answer: 1,
+    explanation: "Al bajar el precio, los consumidores actuales pagan menos y nuevos compradores entran al mercado, elevando el EC. La VEC es positiva."
+  },
+  {
+    type: "tf",
+    typeLabel: "Verdadero o Falso",
+    question: "En un mercado competitivo en equilibrio, el valor marginal que tiene el bien para el consumidor es igual al costo marginal de producirlo.",
+    answer: true,
+    explanation: "Esa es justamente la condición de eficiencia en competencia perfecta: el equilibrio iguala el precio (= disposición a pagar marginal) con el costo marginal."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "¿Cuál de las siguientes NO es una falla de mercado?",
+    options: [
+      "Externalidades.",
+      "Información imperfecta.",
+      "Competencia imperfecta.",
+      "Equilibrio entre oferta y demanda."
+    ],
+    answer: 3,
+    explanation: "El equilibrio entre oferta y demanda no es una falla, sino el resultado eficiente de un mercado competitivo. Las fallas son: competencia imperfecta, externalidades e información imperfecta."
+  },
+  {
+    type: "fill",
+    typeLabel: "Completa el espacio",
+    question: "La contaminación de una fábrica que afecta a una comunidad cercana es un ejemplo de externalidad ____.",
+    answer: ["negativa"],
+    explanation: "Una externalidad negativa impone costos a terceros que no están reflejados en el precio del bien."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "Cuando el Estado fija un precio máximo POR DEBAJO del precio de equilibrio, ¿qué ocurre?",
+    options: [
+      "Se genera exceso de oferta.",
+      "Se genera escasez (la cantidad demandada supera a la ofrecida).",
+      "El mercado se mantiene en equilibrio.",
+      "Aumenta el bienestar total."
+    ],
+    answer: 1,
+    explanation: "Un precio máximo por debajo del equilibrio crea escasez: los consumidores quieren comprar más de lo que los productores ofrecen a ese precio bajo."
+  },
+  {
+    type: "tf",
+    typeLabel: "Verdadero o Falso",
+    question: "El salario mínimo, fijado por encima del salario de equilibrio, siempre beneficia a todos los trabajadores.",
+    answer: false,
+    explanation: "Falso. Beneficia a quienes mantienen su empleo, pero genera desempleo (exceso de oferta de trabajo) para los que no consiguen trabajo a ese salario."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "La Pérdida Irrecuperable de Eficiencia (PIE) se refiere a:",
+    options: [
+      "El impuesto recaudado por el gobierno.",
+      "La transferencia de excedente del consumidor al productor.",
+      "La pérdida neta de excedente total que no es recuperada por nadie.",
+      "El beneficio neto de la intervención estatal."
+    ],
+    answer: 2,
+    explanation: "La PIE es una pérdida pura de bienestar social: no la captura el consumidor, ni el productor, ni el gobierno. Aparece con impuestos, controles de precios y aranceles."
+  },
+  {
+    type: "fill",
+    typeLabel: "Completa el espacio",
+    question: "Cuando el gobierno aplica un impuesto, la carga tributaria recae más en la parte del mercado que es más ____.",
+    answer: ["inelastica", "inelástica"],
+    explanation: "La parte menos elástica (más inelástica) soporta mayor proporción del impuesto, porque tiene menos capacidad de cambiar su comportamiento."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "Si la demanda es totalmente inelástica, ¿quién soporta el 100% del impuesto?",
+    options: [
+      "El productor.",
+      "El consumidor.",
+      "Se reparte 50/50.",
+      "El gobierno."
+    ],
+    answer: 1,
+    explanation: "Cuando la demanda es totalmente inelástica, los consumidores no cambian su consumo aunque suba el precio, así que toda la carga del impuesto recae en ellos."
+  },
+  {
+    type: "tf",
+    typeLabel: "Verdadero o Falso",
+    question: "Una subvención (subsidio) puede analizarse como un impuesto negativo.",
+    answer: true,
+    explanation: "Las subvenciones funcionan al revés que los impuestos: aumentan la cantidad transada en lugar de reducirla. Por eso se modelan como impuestos negativos."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "¿Qué tipo de impuesto se aplica como un porcentaje del valor del producto?",
+    options: [
+      "Impuesto fijo.",
+      "Impuesto ad-quantum.",
+      "Impuesto ad-valorem.",
+      "Arancel."
+    ],
+    answer: 2,
+    explanation: "Los impuestos ad-valorem son un porcentaje del precio (ej.: IVA). Los ad-quantum son una cantidad por unidad (ej.: $0,50 por litro)."
+  },
+  {
+    type: "fill",
+    typeLabel: "Completa el espacio",
+    question: "Un impuesto sobre los bienes importados se conoce como ____.",
+    answer: ["arancel", "aranceles"],
+    explanation: "Los aranceles son impuestos a las importaciones; elevan el precio doméstico por encima del precio mundial, protegiendo a productores nacionales."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "Cuando se aplica un arancel a una importación, ¿quién(es) gana(n) bienestar?",
+    options: [
+      "Solo los consumidores nacionales.",
+      "Los productores nacionales y el gobierno (vía recaudación), aunque hay PIE neta.",
+      "Solo los importadores extranjeros.",
+      "Todos ganan, no hay perdedores."
+    ],
+    answer: 1,
+    explanation: "Los productores nacionales aumentan su excedente y el gobierno recauda. Pero los consumidores pierden más que la suma anterior, dejando una PIE neta para la sociedad."
+  },
+  {
+    type: "tf",
+    typeLabel: "Verdadero o Falso",
+    question: "Las cuotas de importación generan ingresos fiscales directos al gobierno, igual que los aranceles.",
+    answer: false,
+    explanation: "Falso. A diferencia de los aranceles, las cuotas no generan ingresos fiscales directos. La renta se la queda quien obtiene la licencia o cuota de importación."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "¿Cuál de los siguientes factores NO condiciona la estructura de un mercado?",
+    options: [
+      "Número de empresas y consumidores.",
+      "Grado de diferenciación del producto.",
+      "Capacidad de las empresas para fijar precios.",
+      "El color del logo de la empresa."
+    ],
+    answer: 3,
+    explanation: "Los factores son: número de agentes, diferenciación del bien, capacidad de fijar precios y barreras de entrada/salida. El logo no condiciona la estructura del mercado."
+  },
+  {
+    type: "fill",
+    typeLabel: "Completa el espacio",
+    question: "El punto donde se cortan las curvas de oferta y demanda se llama punto de ____.",
+    answer: ["equilibrio"],
+    explanation: "El equilibrio del mercado es donde se igualan las cantidades ofrecidas y demandadas al mismo precio, vaciando el mercado."
+  },
+  {
+    type: "short",
+    typeLabel: "Respuesta breve",
+    question: "Menciona los tres motivos principales por los que el Estado interviene en la economía.",
+    keywords: ["redistribuc", "macroecon", "fallas"],
+    minMatches: 2,
+    sample: "1) Redistribución del ingreso y equidad, 2) Razones macroeconómicas (políticas fiscales y monetarias), y 3) Corrección de fallas de mercado.",
+    explanation: "Los tres motivos son: (1) redistribución del ingreso, (2) razones macroeconómicas como controlar inflación o desempleo, y (3) corregir fallas de mercado (competencia imperfecta, externalidades, información imperfecta)."
+  },
+  {
+    type: "short",
+    typeLabel: "Respuesta breve",
+    question: "Explica brevemente qué es una externalidad y da un ejemplo.",
+    keywords: ["precio", "afect", "tercer", "mercado"],
+    minMatches: 2,
+    sample: "Una externalidad es un efecto secundario (positivo o negativo) de la producción o consumo que NO se refleja en el precio de mercado y afecta a terceros. Ejemplo: la contaminación de una fábrica (negativa) o una vacuna que protege a la comunidad (positiva).",
+    explanation: "Externalidad: efecto que la actividad de un agente tiene sobre terceros sin pasar por el sistema de precios. Puede ser positiva (vacunación, innovación) o negativa (contaminación, ruido)."
+  },
+  {
+    type: "mcq",
+    typeLabel: "Selección simple",
+    question: "Bajo apertura comercial sin barreras (precio mundial < precio doméstico), ¿qué ocurre?",
+    options: [
+      "Los consumidores nacionales pierden bienestar.",
+      "Los productores nacionales aumentan su excedente.",
+      "Aumentan las importaciones y los consumidores ganan más de lo que pierden los productores.",
+      "El precio doméstico sube."
+    ],
+    answer: 2,
+    explanation: "Con apertura, el precio cae al precio mundial: los consumidores ganan, los productores nacionales pierden, pero la ganancia neta es positiva para la sociedad (más importaciones)."
+  }
+];
+
+/* ====================================================================
+   NAVIGATION
+   ==================================================================== */
+const sections = document.querySelectorAll('section');
+const navButtons = document.querySelectorAll('.nav button');
+function showSection(id) {
+  sections.forEach(s => s.classList.toggle('active', s.id === id));
+  navButtons.forEach(b => b.classList.toggle('active', b.dataset.section === id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+navButtons.forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.section)));
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => showSection(b.dataset.go)));
+
+/* ====================================================================
+   FLASHCARDS
+   ==================================================================== */
+let cardIndex = 0;
+const cardEl = document.getElementById('flashcard');
+const cardCounter = document.getElementById('card-counter');
+const cardTitle = document.getElementById('card-title');
+const cardDesc = document.getElementById('card-desc');
+const cardExample = document.getElementById('card-example');
+const cardFact = document.getElementById('card-fact');
+const seenCards = new Set();
+
+function renderCard() {
+  const c = FLASHCARDS[cardIndex];
+  cardEl.classList.remove('flipped');
+  cardTitle.textContent = c.title;
+  cardDesc.textContent = c.desc;
+  cardExample.textContent = c.example;
+  cardFact.textContent = c.fact;
+  cardCounter.textContent = `${cardIndex + 1} / ${FLASHCARDS.length}`;
+  seenCards.add(cardIndex);
+  updateProgress();
+}
+cardEl.addEventListener('click', () => cardEl.classList.toggle('flipped'));
+document.getElementById('prev-card').addEventListener('click', () => {
+  cardIndex = (cardIndex - 1 + FLASHCARDS.length) % FLASHCARDS.length;
+  renderCard();
+});
+document.getElementById('next-card').addEventListener('click', () => {
+  cardIndex = (cardIndex + 1) % FLASHCARDS.length;
+  renderCard();
+});
+
+/* ====================================================================
+   QUIZ
+   ==================================================================== */
+const quizContainer = document.getElementById('quiz-container');
+let qIndex = 0;
+let score = 0;
+let answered = false;
+let answeredCount = 0;
+const seenQuestions = new Set();
+
+function normalize(text) {
+  return text.toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
+
+function renderQuiz() {
+  if (qIndex >= QUESTIONS.length) {
+    renderResults();
+    return;
+  }
+  const q = QUESTIONS[qIndex];
+  answered = false;
+  seenQuestions.add(qIndex);
+  updateProgress();
+
+  const pct = Math.round((qIndex / QUESTIONS.length) * 100);
+  let html = `
+    <div class="quiz-card">
+      <div class="quiz-progress">
+        <div class="bar"><div style="width:${pct}%"></div></div>
+        <div class="text">${qIndex + 1} / ${QUESTIONS.length}</div>
+      </div>
+      <span class="quiz-tag ${q.type === 'tf' ? 'tf' : q.type === 'fill' ? 'fill' : q.type === 'short' ? 'short' : ''}">${q.typeLabel}</span>
+      <div class="question-text">${q.question}</div>
+  `;
+
+  if (q.type === 'mcq') {
+    html += `<div class="options" id="options-list">`;
+    q.options.forEach((opt, i) => {
+      html += `<button class="option" data-i="${i}">${opt}</button>`;
+    });
+    html += `</div>`;
+  } else if (q.type === 'tf') {
+    html += `
+      <div class="options" id="options-list">
+        <button class="option" data-tf="true">✅ Verdadero</button>
+        <button class="option" data-tf="false">❌ Falso</button>
+      </div>
+    `;
+  } else if (q.type === 'fill') {
+    html += `<input type="text" class="text-input" id="fill-input" placeholder="Escribe tu respuesta..." autocomplete="off" />`;
+  } else if (q.type === 'short') {
+    html += `<textarea class="text-input" id="short-input" placeholder="Escribe tu explicación breve..." rows="3"></textarea>`;
+  }
+
+  html += `
+      <div id="feedback-area"></div>
+      <div class="quiz-buttons" id="quiz-buttons">
+        <button class="btn btn-primary" id="check-btn">Verificar</button>
+      </div>
+    </div>
+  `;
+  quizContainer.innerHTML = html;
+  attachQuizHandlers(q);
+}
+
+function attachQuizHandlers(q) {
+  const checkBtn = document.getElementById('check-btn');
+  let selected = null;
+
+  if (q.type === 'mcq') {
+    document.querySelectorAll('.option').forEach(o => {
+      o.addEventListener('click', () => {
+        if (answered) return;
+        document.querySelectorAll('.option').forEach(x => x.classList.remove('selected'));
+        o.classList.add('selected');
+        selected = parseInt(o.dataset.i);
+      });
+    });
+  } else if (q.type === 'tf') {
+    document.querySelectorAll('.option').forEach(o => {
+      o.addEventListener('click', () => {
+        if (answered) return;
+        document.querySelectorAll('.option').forEach(x => x.classList.remove('selected'));
+        o.classList.add('selected');
+        selected = o.dataset.tf === 'true';
+      });
+    });
+  }
+
+  checkBtn.addEventListener('click', () => {
+    if (answered) {
+      qIndex++;
+      renderQuiz();
+      return;
+    }
+    let isCorrect = false;
+    let correctText = "";
+
+    if (q.type === 'mcq') {
+      if (selected === null) { alert("Selecciona una opción primero."); return; }
+      isCorrect = selected === q.answer;
+      correctText = q.options[q.answer];
+      document.querySelectorAll('.option').forEach((o, i) => {
+        o.disabled = true;
+        if (i === q.answer) o.classList.add('correct');
+        else if (i === selected) o.classList.add('wrong');
+      });
+    } else if (q.type === 'tf') {
+      if (selected === null) { alert("Selecciona Verdadero o Falso."); return; }
+      isCorrect = selected === q.answer;
+      correctText = q.answer ? "Verdadero" : "Falso";
+      document.querySelectorAll('.option').forEach(o => {
+        o.disabled = true;
+        const v = o.dataset.tf === 'true';
+        if (v === q.answer) o.classList.add('correct');
+        else if (v === selected) o.classList.add('wrong');
+      });
+    } else if (q.type === 'fill') {
+      const val = normalize(document.getElementById('fill-input').value);
+      if (!val) { alert("Escribe tu respuesta."); return; }
+      isCorrect = q.answer.some(a => normalize(a) === val || val.includes(normalize(a)));
+      correctText = q.answer[0];
+      document.getElementById('fill-input').disabled = true;
+      document.getElementById('fill-input').style.borderColor = isCorrect ? 'var(--primary)' : 'var(--danger)';
+    } else if (q.type === 'short') {
+      const val = normalize(document.getElementById('short-input').value);
+      if (val.length < 10) { alert("Escribe una respuesta más completa."); return; }
+      const matches = q.keywords.filter(k => val.includes(normalize(k))).length;
+      isCorrect = matches >= q.minMatches;
+      correctText = q.sample;
+      document.getElementById('short-input').disabled = true;
+      document.getElementById('short-input').style.borderColor = isCorrect ? 'var(--primary)' : 'var(--danger)';
+    }
+
+    answered = true;
+    answeredCount++;
+    if (isCorrect) score++;
+
+    const fb = document.getElementById('feedback-area');
+    fb.innerHTML = isCorrect
+      ? `<div class="feedback correct">
+           <h4>🎉 ¡Correcto!</h4>
+           <p>${q.explanation}</p>
+         </div>`
+      : `<div class="feedback wrong">
+           <h4>😟 No es correcto</h4>
+           <p><strong>Lo que estuvo mal:</strong> tu respuesta no coincide con la esperada.</p>
+           <div class="correct-answer"><strong>Respuesta correcta:</strong> ${correctText}</div>
+           <p style="margin-top:8px;"><strong>Explicación:</strong> ${q.explanation}</p>
+         </div>`;
+
+    const btnArea = document.getElementById('quiz-buttons');
+    btnArea.innerHTML = qIndex < QUESTIONS.length - 1
+      ? `<button class="btn btn-primary" id="next-q">Continuar ➡</button>`
+      : `<button class="btn btn-primary" id="next-q">Ver resultados 🏁</button>`;
+    document.getElementById('next-q').addEventListener('click', () => {
+      qIndex++;
+      renderQuiz();
+    });
+    updateProgress();
+  });
+}
+
+function renderResults() {
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+  let emoji = "🥉", title = "¡Buen intento!";
+  if (pct >= 90) { emoji = "🏆"; title = "¡Excelente! Dominas el tema."; }
+  else if (pct >= 70) { emoji = "🥇"; title = "¡Muy bien! Vas por buen camino."; }
+  else if (pct >= 50) { emoji = "🥈"; title = "Bien, pero hay que reforzar algunos conceptos."; }
+  else { emoji = "📘"; title = "Repasa las fichas y vuelve a intentarlo."; }
+
+  quizContainer.innerHTML = `
+    <div class="results">
+      <div class="trophy">${emoji}</div>
+      <h2>${title}</h2>
+      <div class="score-big">${score} / ${total}</div>
+      <div class="score-detail">${pct}% de respuestas correctas</div>
+      <div class="results-stats">
+        <div class="pill"><span class="v">${score}</span><span class="l">Aciertos</span></div>
+        <div class="pill"><span class="v">${total - score}</span><span class="l">Errores</span></div>
+        <div class="pill"><span class="v">${pct}%</span><span class="l">Puntuación</span></div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="restart-quiz">🔄 Reiniciar quiz</button>
+        <button class="btn btn-outline" id="go-flash">🃏 Repasar fichas</button>
+        <button class="btn btn-outline" id="go-home">🏠 Inicio</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('restart-quiz').addEventListener('click', () => {
+    qIndex = 0; score = 0; answeredCount = 0;
+    renderQuiz();
+  });
+  document.getElementById('go-flash').addEventListener('click', () => showSection('flashcards'));
+  document.getElementById('go-home').addEventListener('click', () => showSection('dashboard'));
+  updateProgress();
+}
+
+/* ====================================================================
+   PROGRESS
+   ==================================================================== */
+function updateProgress() {
+  document.getElementById('stat-flashcards').textContent = FLASHCARDS.length;
+  document.getElementById('stat-questions').textContent = QUESTIONS.length;
+  const totalItems = FLASHCARDS.length + QUESTIONS.length;
+  const done = seenCards.size + answeredCount;
+  const pct = Math.round((done / totalItems) * 100);
+  document.getElementById('stat-progress').textContent = pct + '%';
+  document.getElementById('overall-progress').style.width = pct + '%';
+}
+
+/* ====================================================================
+   INIT
+   ==================================================================== */
+renderCard();
+renderQuiz();
+updateProgress();
+</script>
+</body>
+</html>
